@@ -1,0 +1,190 @@
+import { Image } from "expo-image";
+import { useState } from "react";
+import { Link } from "expo-router";
+
+import {
+  StyleSheet,
+  TextInput,
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import COLORS from "../../constants/color";
+import { defaultStyles } from "../../constants/styles";
+import { useNavigation } from "@react-navigation/native";
+
+const Login = () => {
+  const navigation = useNavigation();
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleLogin = () => {
+    // Your login logic here
+  };
+
+  return (
+    <ScrollView contentContainerStyle={styles.scrollContainer}>
+      <View style={styles.container}>
+        {/* Illustration */}
+        <View style={styles.topIllustration}>
+          <Image
+            source={require("../../assets/images/i.png")}
+            style={styles.illustration}
+          />
+        </View>
+
+        <View style={styles.card}>
+          <View style={styles.formContainer}>
+            {/* Email */}
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>Email</Text>
+              <View style={styles.inputContainer}>
+                <Ionicons
+                  name="mail-outline"
+                  size={20}
+                  color={COLORS.primary}
+                  style={styles.inputIcon}
+                />
+                <TextInput
+                  style={[defaultStyles.inputField, styles.input]}
+                  placeholder="Enter your Email"
+                  placeholderTextColor={COLORS.placeholderText}
+                  value={email}
+                  onChangeText={setEmail}
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                />
+              </View>
+            </View>
+
+            {/* Password */}
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>Password</Text>
+              <View style={styles.inputContainer}>
+                <Ionicons
+                  name="lock-closed-outline"
+                  size={20}
+                  color={COLORS.primary}
+                  style={styles.inputIcon}
+                />
+                <TextInput
+                  style={[defaultStyles.inputField, styles.input]}
+                  placeholder="Enter your Password"
+                  placeholderTextColor={COLORS.placeholderText}
+                  value={password}
+                  onChangeText={setPassword}
+                  secureTextEntry={!showPassword}
+                  autoCapitalize="none"
+                />
+                <TouchableOpacity
+                  onPress={() => setShowPassword(!showPassword)}
+                  style={styles.eyeIcon}
+                  hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+                >
+                  <Ionicons
+                    name={showPassword ? "eye-outline" : "eye-off-outline"}
+                    size={20}
+                    color={COLORS.primary}
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+
+          <View style={styles.bottomContainer}>
+            <TouchableOpacity>
+              <Text style={styles.bottomText}>Forgot Password?</Text>
+            </TouchableOpacity>
+            <TouchableOpacity  
+            // onPress={() => navigation.navigate("Signup")}
+            >
+              {/* <Text style={styles.bottomText}>Register Now</Text> */}
+       <Link style={styles.bottomText} href="/(auth)/signup">SignUp page</Link>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+    </ScrollView>
+  );
+};
+
+export default Login;
+
+const styles = StyleSheet.create({
+  scrollContainer: {
+    flexGrow: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingVertical: 20,
+  },
+  container: {
+    width: "100%",
+    alignItems: "center",
+    paddingHorizontal: 20,
+    gap: 20,
+  },
+  topIllustration: {
+    width: "100%",
+    height: 350,
+  },
+  illustration: {
+    width: "100%",
+    height: "100%",
+    resizeMode: "contain",
+  },
+  card: {
+    backgroundColor: "white",
+    borderRadius: 10,
+    width: "100%",
+    padding: 20,
+    gap: 20,
+    elevation: 3,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+  },
+  formContainer: {
+    gap: 20,
+  },
+  inputGroup: {
+    gap: 5,
+  },
+  label: {
+    fontSize: 14,
+    color: "#333",
+    marginBottom: 5,
+  },
+  inputContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "#ABABAB",
+    borderRadius: 5,
+    paddingHorizontal: 10,
+  },
+  inputIcon: {
+    marginRight: 8,
+  },
+  input: {
+    flex: 1,
+    fontSize: 14,
+  },
+  eyeIcon: {
+    padding: 5,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  bottomContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  bottomText: {
+    color: COLORS.primary,
+    textTransform: "capitalize",
+  },
+});
