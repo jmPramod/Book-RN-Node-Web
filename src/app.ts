@@ -21,7 +21,7 @@ const runServer = async () => {
     //!Middlewear 
     // Helmet for secure headers
     app.use(helmet());
- 
+  app.use(cors({origin: true, credentials: true}));
     app.use(express.urlencoded({ extended: true }));// used to parse incoming requests with URL-encoded payloads
     app.use(express.json());//parses incoming requests with JSON payloads
     app.use(morgan("dev"));
@@ -37,8 +37,11 @@ const runServer = async () => {
     app.set('views', __dirname+'/views');
     app.use(express.static(__dirname + "/public"));
 
+    app.get("/",(req,res)=>{
+        res.send("Hai")
+    })
     //REST Routes
-    app.use("/",authRoutesRest)
+    app.use("/api",authRoutesRest)
     app.use("/",bookRoutesRest)
 
     //Admin  Routes

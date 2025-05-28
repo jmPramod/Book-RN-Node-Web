@@ -37,5 +37,77 @@ res.status(404).json({
     }
   }
 
+const getBookRestController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const page = parseInt(req.query["page[number]"] as string) || 1;
+    const limit = parseInt(req.query["page[size]"] as string) || 10;
 
-  export{createBookRestController}
+    const skip = (page - 1) * limit;
+
+    const [books, total] = await Promise.all([
+      Book.find().skip(skip).limit(limit),
+      Book.countDocuments(),
+    ]);
+
+    const totalPages = Math.ceil(total / limit);
+
+    res.status(200).json({
+      data: books,
+      meta: {
+        totalItems: total,
+        totalPages,
+        currentPage: page,
+        pageSize: limit,
+      },
+      links: {
+        self: `${req.baseUrl}${req.path}?page[number]=${page}&page[size]=${limit}`,
+        next:
+          page < totalPages
+            ? `${req.baseUrl}${req.path}?page[number]=${page + 1}&page[size]=${limit}`
+            : null,
+        prev:
+          page > 1
+            ? `${req.baseUrl}${req.path}?page[number]=${page - 1}&page[size]=${limit}`
+            : null,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const deleteBookRestController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const bookId = req.params.id;
+
+    const book = await Book.findById(bookId);
+
+    if (!book) {
+       res.status(404).json({
+        errors: [
+          {
+            status: "404",
+            title: "Not Found",
+            detail: `Book with ID ${bookId} not found.`,
+          },
+        ],
+      });
+      return
+    }
+
+    await book.deleteOne();
+
+    res.status(204).send();
+  } catch (error) {
+    next(error);
+  }
+};
+  export{createBookRestController,getBookRestController,deleteBookRestController}

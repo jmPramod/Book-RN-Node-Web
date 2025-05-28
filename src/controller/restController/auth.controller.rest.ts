@@ -72,10 +72,14 @@ const passwordMatch= userEmail?.password && await bcrypt.compare( req.body.passw
   next: NextFunction
 ) => {
   try {
+    console.log("req.body",req.body);
+    
     const { rePassword,...data } = req.body;
     const {email,phone,password}=data
     const userEmail = await Auth.findOne({ email });
     const userPhone = await Auth.findOne({ phone });
+    console.log("1");
+    
     if(password!=rePassword){
       res.status(400).json({
         data: userEmail,
@@ -87,41 +91,54 @@ const passwordMatch= userEmail?.password && await bcrypt.compare( req.body.passw
       });
       return;
     }
-  
+    console.log("2");
     if (userEmail||userPhone) {
-      next(createError(400, "User already exists"));
+      next(createError(400, `User ${userEmail?"Email":"Phone Number"} already exists  `));
       return;
      }
-
+ console.log("3");
+   
     const { error, value } = registerSchema.validate(data);
+     console.log("4",error);
+     console.log("4.1",value);
+     
+   
 if(error){
+    const validationMessage = error.details[0]?.message || "Validation error";
+    
      res.status(400).json({
         data: null,
         meta: null,
         error: {
           status: "401",
-          title: error.details[0].message,
+          title: validationMessage,
         },
       });
       return;
 }
+ console.log("5");
+   
     const hashPassword=await bcrypt.hash(password,11)
     value.password = hashPassword;
+console.log("6");
 
     const newUser=new Auth(value)
     const saveUser=await newUser.save()
+    console.log("7");
+    
     const token = jwt.sign(
       { email: saveUser.email, id: saveUser._id,admin:saveUser.isAdmin },
       process.env.JWT_SECRET as string,{ expiresIn: "90d" }
     );
+console.log("8");
 
-    res.status(400).json({
+    res.status(200).json({
       data: saveUser,
       meta: {
         access_token: token,
         token_type: "Bearer",
         expires_in: "90d",
-        message: "Logged in successfully",
+        message:{title: "Logged in successfully",status:200},
       },
       error: null,
     });

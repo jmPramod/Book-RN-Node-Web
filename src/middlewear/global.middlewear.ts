@@ -5,10 +5,9 @@ export const ErrorHandelingMiddlewear: ErrorRequestHandler = (err, req, res, nex
   const message = err.message || "Something went wrong!";
 
   res.status(status).json({
-    status,
-    message,
     data: null,
-    error: message,
+    error: {title:message,status},
+    meta:null,
     stack:  err.stack ,
   });
 };

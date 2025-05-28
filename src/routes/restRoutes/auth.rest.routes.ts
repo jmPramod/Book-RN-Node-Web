@@ -5,9 +5,9 @@ import { uploadProfile } from "../../middlewear/multer";
 import { verifyUser } from "../../middlewear/verifyToken";
 export const authRoutesRest=express.Router()
 
-authRoutesRest.post("/api/login",loginControllerRest)
+authRoutesRest.post("/login",loginControllerRest)
 
 
-authRoutesRest.post("/api/sign-up",registerControllerRest)
+authRoutesRest.post("/sign-up",registerControllerRest)
 
-authRoutesRest.patch("/api/user/:id", verifyUser, uploadProfile.any(), updateUserController);
+authRoutesRest.patch("/user/:id", verifyUser, uploadProfile.any(), updateUserController);
