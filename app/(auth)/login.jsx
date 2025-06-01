@@ -14,6 +14,7 @@ import { Ionicons } from "@expo/vector-icons";
 import COLORS from "../../constants/color";
 import { defaultStyles } from "../../constants/styles";
 import { useNavigation } from "@react-navigation/native";
+import { useAuthStore } from "../../store/authStore";
 
 const Login = () => {
   const navigation = useNavigation();
@@ -21,10 +22,27 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const { user, isLoading, register } = useAuthStore();
 
   const handleLogin = () => {
-    // Your login logic here
+    if (!email || !password) {
+      setError("Please enter both email and password.");
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setError("Please enter a valid email address.");
+      return;
+    }
+
+    setError("");
+
+    // Proceed with your login logic here
+    // Example: register(email, password);
+    console.log("Login successful with:", email, password);
   };
 
   return (
@@ -100,13 +118,24 @@ const Login = () => {
             <TouchableOpacity>
               <Text style={styles.bottomText}>Forgot Password?</Text>
             </TouchableOpacity>
-            <TouchableOpacity  
-            // onPress={() => navigation.navigate("Signup")}
-            >
-              {/* <Text style={styles.bottomText}>Register Now</Text> */}
-       <Link style={styles.bottomText} href="/(auth)/signup">SignUp page</Link>
+            <TouchableOpacity>
+              <Link style={styles.bottomText} href="/(auth)/signup">
+                SignUp page
+              </Link>
             </TouchableOpacity>
           </View>
+
+          {error ? <Text style={styles.errorText}>{error}</Text> : null}
+
+          <TouchableOpacity
+            onPress={handleLogin}
+            disabled={isLoading}
+            style={[styles.loginButton, isLoading && { opacity: 0.6 }]}
+          >
+            <Text style={styles.loginButtonText}>
+              {isLoading ? "Loading..." : "Submit"}
+            </Text>
+          </TouchableOpacity>
         </View>
       </View>
     </ScrollView>
@@ -136,6 +165,7 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
     resizeMode: "contain",
+   
   },
   card: {
     backgroundColor: "white",
@@ -186,5 +216,23 @@ const styles = StyleSheet.create({
   bottomText: {
     color: COLORS.primary,
     textTransform: "capitalize",
+  },
+  errorText: {
+    color: "red",
+    textAlign: "center",
+    marginTop: -10,
+    marginBottom: 5,
+  },
+  loginButton: {
+    backgroundColor:COLORS.primary,
+    paddingVertical: 12,
+    borderRadius: 5,
+    alignItems: "center",
+    marginTop: 10,
+  },
+  loginButtonText: {
+    color: "white",
+    fontSize: 16,
+    fontWeight: "bold",
   },
 });

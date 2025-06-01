@@ -1,7 +1,8 @@
 import { Image } from "expo-image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "expo-router";
-
+import { useAuthStore } from "../../store/authStore";
+import { Picker } from "@react-native-picker/picker";
 import {
   StyleSheet,
   TextInput,
@@ -9,26 +10,78 @@ import {
   Text,
   TouchableOpacity,
   ScrollView,
+  Button,
+  ActivityIndicator,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import COLORS from "../../constants/color";
 import { defaultStyles } from "../../constants/styles";
 
 const SignUp = () => {
-  const [email, setEmail] = useState("");
   const [formInput, setFormInput] = useState({
-    firstName: "",
-    lastName: "",
+    userFirstName: "",
+    userLastName: "",
     phone: "",
+    email: "",
+    gender: "",
+    password: "",
+    rePassword: "",
   });
-  const [password, setPassword] = useState("");
+
+  const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [showRePassword, setShowRePassword] = useState(false);
+  const { register, isLoading } = useAuthStore();
+
+  const validate = () => {
+    const newErrors = {};
+
+    if (!formInput.userFirstName.trim()) newErrors.userFirstName = "First name is required.";
+    if (!formInput.userLastName.trim()) newErrors.userLastName = "Last name is required.";
+
+    if (!formInput.phone.trim()) {
+      newErrors.phone = "Phone number is required.";
+    } else if (!/^\d{10}$/.test(formInput.phone)) {
+      newErrors.phone = "Phone number must be 10 digits.";
+    }
+
+    if (!formInput.email.trim()) {
+      newErrors.email = "Email is required.";
+    } else if (!/\S+@\S+\.\S+/.test(formInput.email)) {
+      newErrors.email = "Invalid email format.";
+    }
+
+    if (!formInput.gender) newErrors.gender = "Gender is required.";
+
+    if (!formInput.password) {
+      newErrors.password = "Password is required.";
+    } else if (formInput.password.length < 6) {
+      newErrors.password = "Password must be at least 6 characters.";
+    }
+
+    if (!formInput.rePassword) {
+      newErrors.rePassword = "Re-enter your password.";
+    } else if (formInput.password !== formInput.rePassword) {
+      newErrors.rePassword = "Passwords do not match.";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSignUp = () => {
+    if (validate()) {
+      register(formInput);
+    }
+  };
+
+  useEffect(() => {
+    setErrors({}); // Clear errors on change
+  }, [formInput]);
 
   return (
     <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
       <View style={styles.container}>
-        {/* Illustration */}
         <View style={styles.topIllustation}>
           <Image
             source={require("../../assets/images/register.png")}
@@ -38,144 +91,193 @@ const SignUp = () => {
 
         <View style={styles.card}>
           <View style={styles.formContiner}>
-            {/* First Name */}
+            <InputField
+              label="First Name"
+              icon="person-outline"
+              placeholder="Enter your First Name"
+              value={formInput.userFirstName}
+              onChangeText={(text) =>
+                setFormInput({ ...formInput, userFirstName: text })
+              }
+              disabled={isLoading}
+              error={errors.userFirstName}
+            />
+
+            <InputField
+              label="Last Name"
+              icon="person-outline"
+              placeholder="Enter your Last Name"
+              value={formInput.userLastName}
+              onChangeText={(text) =>
+                setFormInput({ ...formInput, userLastName: text })
+              }
+              disabled={isLoading}
+              error={errors.userLastName}
+            />
+
+            <InputField
+              label="Phone"
+              icon="call-outline"
+              placeholder="Enter your Phone Number"
+              keyboardType="phone-pad"
+              value={formInput.phone}
+              onChangeText={(text) =>
+                setFormInput({ ...formInput, phone: text })
+              }
+              disabled={isLoading}
+              error={errors.phone}
+            />
+
+            <InputField
+              label="Email"
+              icon="mail-outline"
+              placeholder="Enter your Email"
+              keyboardType="email-address"
+              autoCapitalize="none"
+              value={formInput.email}
+              onChangeText={(text) =>
+                setFormInput({ ...formInput, email: text })
+              }
+              disabled={isLoading}
+              error={errors.email}
+            />
+
             <View style={styles.inputGroup}>
-              <Text style={styles.label}>First Name</Text>
-              <View style={styles.inputContainer}>
-                <Ionicons
-                  name="person-outline"
-                  size={20}
-                  color={COLORS.primary}
-                  style={styles.inputIcon}
-                />
-                <TextInput
-                  style={[defaultStyles.inputField, styles.input]}
-                  placeholder="Enter your First Name"
-                  placeholderTextColor={COLORS.placeholderText}
-                  value={formInput.firstName}
-                  onChangeText={(text) =>
-                    setFormInput({ ...formInput, firstName: text })
+              <Text style={styles.label}>Gender</Text>
+              <View style={styles.pickerContainer}>
+                <Picker
+                  selectedValue={formInput.gender}
+                  onValueChange={(itemValue) =>
+                    setFormInput({ ...formInput, gender: itemValue })
                   }
-                />
-              </View>
-            </View>
-
-            {/* Last Name */}
-            <View style={styles.inputGroup}>
-              <Text style={styles.label}>Last Name</Text>
-              <View style={styles.inputContainer}>
-                <Ionicons
-                  name="person-outline"
-                  size={20}
-                  color={COLORS.primary}
-                  style={styles.inputIcon}
-                />
-                <TextInput
-                  style={[defaultStyles.inputField, styles.input]}
-                  placeholder="Enter your Last Name"
-                  placeholderTextColor={COLORS.placeholderText}
-                  value={formInput.lastName}
-                  onChangeText={(text) =>
-                    setFormInput({ ...formInput, lastName: text })
-                  }
-                />
-              </View>
-            </View>
-
-            {/* Phone */}
-            <View style={styles.inputGroup}>
-              <Text style={styles.label}>Phone</Text>
-              <View style={styles.inputContainer}>
-                <Ionicons
-                  name="call-outline"
-                  size={20}
-                  color={COLORS.primary}
-                  style={styles.inputIcon}
-                />
-                <TextInput
-                  style={[defaultStyles.inputField, styles.input]}
-                  placeholder="Enter your Phone Number"
-                  placeholderTextColor={COLORS.placeholderText}
-                  value={formInput.phone}
-                  onChangeText={(text) =>
-                    setFormInput({ ...formInput, phone: text })
-                  }
-                  keyboardType="phone-pad"
-                />
-              </View>
-            </View>
-
-            {/* Email */}
-            <View style={styles.inputGroup}>
-              <Text style={styles.label}>Email</Text>
-              <View style={styles.inputContainer}>
-                <Ionicons
-                  name="mail-outline"
-                  size={20}
-                  color={COLORS.primary}
-                  style={styles.inputIcon}
-                />
-                <TextInput
-                  style={[defaultStyles.inputField, styles.input]}
-                  placeholder="Enter your Email"
-                  placeholderTextColor={COLORS.placeholderText}
-                  value={email}
-                  onChangeText={setEmail}
-                  keyboardType="email-address"
-                  autoCapitalize="none"
-                />
-              </View>
-            </View>
-
-            {/* Password */}
-            <View style={styles.inputGroup}>
-              <Text style={styles.label}>Password</Text>
-              <View style={styles.inputContainer}>
-                <Ionicons
-                  name="lock-closed-outline"
-                  size={20}
-                  color={COLORS.primary}
-                  style={styles.inputIcon}
-                />
-                <TextInput
-                  style={[defaultStyles.inputField, styles.input]}
-                  placeholder="Enter your Password"
-                  placeholderTextColor={COLORS.placeholderText}
-                  value={password}
-                  onChangeText={setPassword}
-                  secureTextEntry={!showPassword}
-                  autoCapitalize="none"
-                />
-                <TouchableOpacity
-                  onPress={() => setShowPassword(!showPassword)}
-                  style={styles.eyeIcon}
+                  style={{ flex: 1 }}
+                  enabled={!isLoading}
                 >
-                  <Ionicons
-                    name={showPassword ? "eye-outline" : "eye-off-outline"}
-                    size={20}
-                    color={COLORS.primary}
-                  />
-                </TouchableOpacity>
+                  <Picker.Item label="Select Gender" value="" enabled={false} />
+                  <Picker.Item label="Male" value="Male" />
+                  <Picker.Item label="Female" value="Female" />
+                  <Picker.Item label="Others" value="Others" />
+                </Picker>
               </View>
+              {errors.gender && (
+                <Text style={styles.errorText}>{errors.gender}</Text>
+              )}
             </View>
+
+            <InputField
+              label="Password"
+              icon="lock-closed-outline"
+              placeholder="Enter your Password"
+              secureTextEntry={!showPassword}
+              value={formInput.password}
+              onChangeText={(text) =>
+                setFormInput({ ...formInput, password: text })
+              }
+              showToggle
+              showValue={showPassword}
+              toggleShow={() => setShowPassword(!showPassword)}
+              disabled={isLoading}
+              error={errors.password}
+            />
+
+            <InputField
+              label="Re-enter Password"
+              icon="lock-closed-outline"
+              placeholder="Re-enter your Password"
+              secureTextEntry={!showRePassword}
+              value={formInput.rePassword}
+              onChangeText={(text) =>
+                setFormInput({ ...formInput, rePassword: text })
+              }
+              showToggle
+              showValue={showRePassword}
+              toggleShow={() => setShowRePassword(!showRePassword)}
+              disabled={isLoading}
+              error={errors.rePassword}
+            />
           </View>
 
-          {/* Bottom links */}
           <View style={styles.bottomContainer}>
-            <TouchableOpacity>
+            <TouchableOpacity disabled={isLoading}>
               <Text style={styles.forgotPassword}>Forgot Password?</Text>
             </TouchableOpacity>
-            <TouchableOpacity>
-              {/* <Text style={styles.forgotPassword}>Register Now</Text> */}
-         <Link style={styles.forgotPassword} href="/(auth)/login">Back to Login</Link>
-
+            <TouchableOpacity disabled={isLoading}>
+              <Link style={styles.forgotPassword} href="/(auth)/login">
+                Back to Login
+              </Link>
             </TouchableOpacity>
           </View>
+
+        {isLoading ? (
+  <ActivityIndicator size="large" color={COLORS.primary} style={{ marginTop: 10 }} />
+) : (
+  <TouchableOpacity
+    onPress={handleSignUp}
+    style={styles.submitButton}
+    disabled={isLoading}
+  >
+    <Text style={styles.submitButtonText}>Register</Text>
+  </TouchableOpacity>
+)}
+
         </View>
       </View>
     </ScrollView>
   );
 };
+
+const InputField = ({
+  label,
+  icon,
+  placeholder,
+  value,
+  onChangeText,
+  keyboardType = "default",
+  secureTextEntry = false,
+  autoCapitalize = "sentences",
+  showToggle = false,
+  showValue,
+  toggleShow,
+  disabled = false,
+  error,
+}) => (
+  <View style={styles.inputGroup}>
+    <Text style={styles.label}>{label}</Text>
+    <View style={styles.inputContainer}>
+      <Ionicons
+        name={icon}
+        size={20}
+        color={COLORS.primary}
+        style={styles.inputIcon}
+      />
+      <TextInput
+        style={[defaultStyles.inputField, styles.input]}
+        placeholder={placeholder}
+        placeholderTextColor={COLORS.placeholderText}
+        value={value}
+        onChangeText={onChangeText}
+        keyboardType={keyboardType}
+        secureTextEntry={secureTextEntry}
+        autoCapitalize={autoCapitalize}
+        editable={!disabled}
+      />
+      {showToggle && (
+        <TouchableOpacity
+          onPress={toggleShow}
+          style={styles.eyeIcon}
+          disabled={disabled}
+        >
+          <Ionicons
+            name={showValue ? "eye-outline" : "eye-off-outline"}
+            size={20}
+            color={COLORS.primary}
+          />
+        </TouchableOpacity>
+      )}
+    </View>
+    {error && <Text style={styles.errorText}>{error}</Text>}
+  </View>
+);
 
 export default SignUp;
 
@@ -222,6 +324,13 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     paddingHorizontal: 10,
   },
+  pickerContainer: {
+    borderWidth: 1,
+    borderColor: "#ABABAB",
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+  },
   inputIcon: {
     marginRight: 8,
   },
@@ -241,4 +350,23 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
   },
+  errorText: {
+    color: "red",
+    fontSize: 12,
+    marginTop: 5,
+  },
+submitButton: {
+  backgroundColor: COLORS.primary,
+  paddingVertical: 15,
+  borderRadius: 5,
+  alignItems: "center",
+  marginTop: 15,
+},
+
+submitButtonText: {
+  color: "white",
+  fontWeight: "bold",
+  fontSize: 16,
+},
+
 });
