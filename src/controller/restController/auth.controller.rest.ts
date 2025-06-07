@@ -52,12 +52,9 @@ const passwordMatch= userEmail?.password && await bcrypt.compare( req.body.passw
         access_token: token,
         token_type: "Bearer",
         expires_in: "90d",
-        message: "Logged in successfully",
+        message:{title: "Logged in successfully",status:200},
       },
-      error: {
-        status: "400",
-        title: `User Does not Exist`,
-      },
+      error: null,
     });
     return;
 
