@@ -62,6 +62,7 @@ const getBookRestController = async (
         totalPages,
         currentPage: page,
         pageSize: limit,
+        message:{status:200,title:"Book Fetched Successfuly"}
       },
       links: {
         self: `${req.baseUrl}${req.path}?page[number]=${page}&page[size]=${limit}`,
