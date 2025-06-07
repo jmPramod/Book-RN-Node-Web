@@ -41,6 +41,8 @@ const verifyToken = (req: Request, res: Response, next: NextFunction) => {
       }
     );
   } catch (err) {
+       console.log("error8",err)
+
     return next(createError(401, "Token Error!"));
   }
 };

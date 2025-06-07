@@ -31,7 +31,7 @@ res.status(404).json({
   error: null,
 });
     } catch (error) {
-      console.log("error",error);
+      console.log("error4",error);
       
         next(error)
     }
@@ -76,6 +76,8 @@ const getBookRestController = async (
       },
     });
   } catch (error) {
+       console.log("error5",error)
+
     next(error);
   }
 };
@@ -107,6 +109,8 @@ const deleteBookRestController = async (
 
     res.status(204).send();
   } catch (error) {
+       console.log("error6",error)
+
     next(error);
   }
 };

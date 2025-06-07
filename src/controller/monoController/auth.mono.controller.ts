@@ -7,6 +7,7 @@ try {
 return res.render("home")
 
 } catch (error) {
+    console.log("error1",error)
     next(error)
 }
 

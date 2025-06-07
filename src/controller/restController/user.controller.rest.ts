@@ -60,6 +60,8 @@ export const updateUserController=async (
     
 
     } catch (error) {
+         console.log("error7",error)
+
      next(error)   
     }
   }

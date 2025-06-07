@@ -62,6 +62,8 @@ const passwordMatch= userEmail?.password && await bcrypt.compare( req.body.passw
     return;
 
   } catch (error) {
+       console.log("error2",error)
+
     next(error);
   }
 };
@@ -143,7 +145,8 @@ console.log("8");
       error: null,
     });
   } catch (error) {
-    console.log("error");
+      console.log("error3",error)
+
     
     next(error)
   }
