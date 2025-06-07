@@ -25,7 +25,7 @@ const createBookRestController=async (
         }
 const newBook=new  Book(req.body)
 const data =await newBook.save()
-res.status(404).json({
+res.status(200).json({
   data: data,
   meta: {message:"Book created Successfully"},
   error: null,
