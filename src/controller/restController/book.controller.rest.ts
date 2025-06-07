@@ -49,7 +49,10 @@ const getBookRestController = async (
     const skip = (page - 1) * limit;
 
     const [books, total] = await Promise.all([
-      Book.find().skip(skip).limit(limit),
+      Book.find()
+        .skip(skip)
+        .limit(limit)
+        .populate('user', 'name email profileImage userFirstName userLastName'), // 👈 populate 'user', and you can select fields if needed
       Book.countDocuments(),
     ]);
 
@@ -62,7 +65,7 @@ const getBookRestController = async (
         totalPages,
         currentPage: page,
         pageSize: limit,
-        message:{status:200,title:"Book Fetched Successfuly"}
+        message: { status: 200, title: "Book Fetched Successfully" },
       },
       links: {
         self: `${req.baseUrl}${req.path}?page[number]=${page}&page[size]=${limit}`,
@@ -77,8 +80,7 @@ const getBookRestController = async (
       },
     });
   } catch (error) {
-       console.log("error5",error)
-
+    console.log("error5", error);
     next(error);
   }
 };
