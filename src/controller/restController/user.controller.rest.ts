@@ -12,7 +12,17 @@ export const updateUserController=async (
     try {
 
         const oldData = await Auth.findById(req.params.id)
-
+   if(!oldData){
+      res.status(400).json({
+        data: null,
+        meta: null,
+        error: {
+          status: "400",
+          title: `User Does not Exist`,
+        },
+      });
+      return;
+    }
 
         let existingImages = {};
         if (Array.isArray(req.files) && req.files.length > 0) {

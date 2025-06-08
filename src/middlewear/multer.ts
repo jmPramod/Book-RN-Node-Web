@@ -5,7 +5,7 @@ import { v2 as cloudinaryImage } from "cloudinary";
 const ProductStorage = new CloudinaryStorage({
   cloudinary: cloudinaryImage,
   params: async (req, file) => ({
-    folder: "BooksImage",
+    folder: "Book-RN-Node-Web_Book",
     transformation: [
       { width: 800, height: 600, crop: "limit" },
       { quality: "auto" },
@@ -19,7 +19,7 @@ const ProductStorage = new CloudinaryStorage({
 const ProfileStorage = new CloudinaryStorage({
   cloudinary: cloudinaryImage,
   params: async (req, file) => ({
-    folder: "ProfileRNImage",
+    folder: "Book-RN-Node-Web_Profile",
     transformation: [
       { width: 800, height: 600, crop: "limit" },
       { quality: "auto" },

@@ -7,4 +7,4 @@ export const bookRoutesRest=express.Router()
 bookRoutesRest.post("/api/book",verifyUser,uploadBook.any(), createBookRestController)
 
 bookRoutesRest.get("/api/book",verifyUser, getBookRestController)
-bookRoutesRest.delete("/api/book",verifyUser, deleteBookRestController)
+bookRoutesRest.delete("/api/book/:id",verifyUser, deleteBookRestController)

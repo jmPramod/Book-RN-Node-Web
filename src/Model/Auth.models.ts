@@ -1,6 +1,5 @@
 import mongoose, { Document, Schema } from "mongoose";
 
-
 export interface IAuth extends Document {
   userFirstName?: string;
   userLastName?: string;
@@ -13,7 +12,7 @@ export interface IAuth extends Document {
   isAdmin?: boolean;
   loginHistory?: {
     count?: number;
-    current_time?: Date;
+    current_times?: string[]; // updated to array of strings
   };
   gender?: "Male" | "Female" | "Others";
   profileImage?: {
@@ -23,7 +22,6 @@ export interface IAuth extends Document {
   createdAt?: Date;
   updatedAt?: Date;
 }
-
 
 const authSchema = new Schema<IAuth>(
   {
@@ -37,8 +35,8 @@ const authSchema = new Schema<IAuth>(
     password: { type: String },
     isAdmin: { type: Boolean, default: false },
     loginHistory: {
-      count: { type: Number },
-      current_time: { type: Date, default: Date.now }
+      count: { type: Number,default:0 },
+      current_times: { type: [String], default: [] } // updated to array of strings
     },
     gender: { type: String, enum: ["Male", "Female", "Others"] },
     profileImage: {
@@ -52,6 +50,5 @@ const authSchema = new Schema<IAuth>(
   },
   { timestamps: true }
 );
-
 
 export const Auth = mongoose.model<IAuth>("Auth", authSchema);

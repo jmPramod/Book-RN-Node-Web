@@ -41,6 +41,16 @@ const passwordMatch= userEmail?.password && await bcrypt.compare( req.body.passw
     }
 
     let {password,...data}=userEmail
+  userEmail.loginHistory = {
+  count: (userEmail.loginHistory?.count || 0) + 1,
+  current_times: [
+    ...(userEmail.loginHistory?.current_times || []),
+    new Date().toISOString()
+  ]
+};
+
+    await userEmail.save(); // Save the updated document
+
     const token = jwt.sign(
       { email: userEmail.email, id: userEmail._id,admin:userEmail.isAdmin },
       process.env.JWT_SECRET as string,{ expiresIn: "90d" }

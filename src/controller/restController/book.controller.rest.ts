@@ -93,9 +93,9 @@ const deleteBookRestController = async (
   try {
     const bookId = req.params.id;
 
-    const book = await Book.findById(bookId);
+    const oldData = await Book.findById(bookId);
 
-    if (!book) {
+    if (!oldData) {
        res.status(404).json({
         errors: [
           {
@@ -107,10 +107,22 @@ const deleteBookRestController = async (
       });
       return
     }
+      if (oldData && oldData.image?.imgPublicId) {
+                await cloudinaryImg.uploader.destroy(oldData.image.imgPublicId, (error, result) => {
+                  if (error) {
+                    console.error('Error deleting thumbnail image:', error);
+                  } else {
+                    console.log('Deleted thumbnail image:', result);
+                  }
+                });
+              }
 
-    await book.deleteOne();
-
-    res.status(204).send();
+    await oldData.deleteOne();
+res.status(200).json({
+  data: null,
+  meta: {message:{title:"Book Deleted Successfully",status:200}},
+  error: null,
+});
   } catch (error) {
        console.log("error6",error)
 
