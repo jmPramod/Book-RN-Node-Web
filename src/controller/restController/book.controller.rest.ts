@@ -42,18 +42,25 @@ const getBookRestController = async (
   res: Response,
   next: NextFunction
 ) => {
-  try {
+ try {
     const page = parseInt(req.query["page[number]"] as string) || 1;
     const limit = parseInt(req.query["page[size]"] as string) || 10;
-
     const skip = (page - 1) * limit;
 
+    const userId = req.query.userId as string | undefined; // 👈 optional userId
+
+    // Build filter condition
+    const filter: any = {};
+    if (userId) {
+      filter.user = userId;
+    }
+
     const [books, total] = await Promise.all([
-      Book.find()
+      Book.find(filter) // 👈 apply filter (with or without user)
         .skip(skip)
         .limit(limit)
-        .populate('user', 'name email profileImage userFirstName userLastName'), // 👈 populate 'user', and you can select fields if needed
-      Book.countDocuments(),
+        .populate("user", "name email profileImage userFirstName userLastName"),
+      Book.countDocuments(filter), // 👈 count with same filter
     ]);
 
     const totalPages = Math.ceil(total / limit);
@@ -65,17 +72,21 @@ const getBookRestController = async (
         totalPages,
         currentPage: page,
         pageSize: limit,
-        message: { status: 200, title: "Book Fetched Successfully" },
+        message: { status: 200, title: "Books Fetched Successfully" },
       },
       links: {
-        self: `${req.baseUrl}${req.path}?page[number]=${page}&page[size]=${limit}`,
+        self: `${req.baseUrl}${req.path}?${userId ? `userId=${userId}&` : ""}page[number]=${page}&page[size]=${limit}`,
         next:
           page < totalPages
-            ? `${req.baseUrl}${req.path}?page[number]=${page + 1}&page[size]=${limit}`
+            ? `${req.baseUrl}${req.path}?${userId ? `userId=${userId}&` : ""}page[number]=${
+                page + 1
+              }&page[size]=${limit}`
             : null,
         prev:
           page > 1
-            ? `${req.baseUrl}${req.path}?page[number]=${page - 1}&page[size]=${limit}`
+            ? `${req.baseUrl}${req.path}?${userId ? `userId=${userId}&` : ""}page[number]=${
+                page - 1
+              }&page[size]=${limit}`
             : null,
       },
     });
