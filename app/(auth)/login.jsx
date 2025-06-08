@@ -1,6 +1,6 @@
 import { Image } from "expo-image";
-import { useState } from "react";
-import { Link } from "expo-router";
+import { useEffect, useState } from "react";
+import { Link, useRouter } from "expo-router";
 
 import {
   StyleSheet,
@@ -16,17 +16,18 @@ import { defaultStyles } from "../../constants/styles";
 import { useNavigation } from "@react-navigation/native";
 import { useAuthStore } from "../../store/authStore";
 
-const Login = () => {
-  const navigation = useNavigation();
+const Login = () => { 
+  
+    const router = useRouter();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
 
-  const { user, isLoading, register } = useAuthStore();
+  const { user, token, isLoading,login } = useAuthStore();
 
-  const handleLogin = () => {
+  const handleLogin =async () => {
     if (!email || !password) {
       setError("Please enter both email and password.");
       return;
@@ -37,14 +38,18 @@ const Login = () => {
       setError("Please enter a valid email address.");
       return;
     }
-
+ 
     setError("");
-
-    // Proceed with your login logic here
-    // Example: register(email, password);
-    console.log("Login successful with:", email, password);
-  };
-
+    const payload={email,password}
+const res=await login(payload)
+    };
+useEffect(()=>{
+  if(token&&user){
+  router.push("/")
+  }
+  console.log("user, token", token,user);
+  
+},[user, token])
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <View style={styles.container}>
@@ -73,7 +78,7 @@ const Login = () => {
                   placeholder="Enter your Email"
                   placeholderTextColor={COLORS.placeholderText}
                   value={email}
-                  onChangeText={setEmail}
+                  onChangeText={(text) => setEmail(text.trim())}
                   keyboardType="email-address"
                   autoCapitalize="none"
                 />
@@ -95,7 +100,7 @@ const Login = () => {
                   placeholder="Enter your Password"
                   placeholderTextColor={COLORS.placeholderText}
                   value={password}
-                  onChangeText={setPassword}
+                  onChangeText={(text) => setPassword(text.trim())}
                   secureTextEntry={!showPassword}
                   autoCapitalize="none"
                 />

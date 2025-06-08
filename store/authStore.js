@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { registerApi } from "../services/API.services";
+import { loginApi, registerApi } from "../services/API.services";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Alert } from "react-native";
 const apiUrl = process.env.EXPO_PUBLIC_API_URL;
@@ -10,40 +10,54 @@ export const useAuthStore = create((set) => ({
   register: async (payload) => {
     set({ isLoading: true });
     const res = await registerApi(payload);
-      console.log("API result", res.data.data);
-      console.log("API result", res.data.meta);
-console.log("res?.meta?.message?.status",res.data?.meta?.message?.status);
-
+ 
     if (res.data?.meta?.message?.status == 200) {
-      console.log(" JSON.stringify(res.data)", JSON.stringify(res.data.data));
-      console.log(" res?.meta?.token", res?.data?.meta?.access_token);
-      
-      
+    
       await AsyncStorage.setItem("user", JSON.stringify(res.data.data));
       await AsyncStorage.setItem("token", res?.data?.meta?.access_token);
-
-      set({ token: res?.meta?.token, user: res.data, isLoading: false });
-       Alert.alert("Error",res?.data?.meta?.message?.title);
+ set({ token:  res?.data?.meta?.access_token, user: res.data.data, isLoading: false });
+       Alert.alert("Success", res?.data?.meta?.message?.title);
+      
     } else {
       Alert.alert("Error", res?.meta?.error || "Something went wrong");
     }
   },
+  login: async (payload) => {
+    set({ isLoading: true });
+    const res = await loginApi(payload);
+console.log("pk1",res);
 
+    if (res.data?.meta?.message?.status == 200) {
+      await AsyncStorage.setItem("user", JSON.stringify(res.data.data));
+      await AsyncStorage.setItem("token", res?.data?.meta?.access_token);
+console.log(" res?.data?.meta?.access_token", res.data.data);
 
+      set({ token: res?.data?.meta?.access_token, user: res.data.data, isLoading: false });
+      Alert.alert("Success", res?.data?.meta?.message?.title);
+     set({ isLoading: false});
+   
+    } else {
+      Alert.alert("Error", res?.meta?.error || "Something went wrong");
+     set({ isLoading: false });
+   
+    }
+  },
 
-  checkAuth:async ()=>{
-  try {
-      const token=await AsyncStorage.getItem("token")
-    const userJson=await AsyncStorage.getItem("user")
-    const user=userJson?JSON.parse(userJson):null;
+  checkAuth: async () => {
+    try {
+      const token = await AsyncStorage.getItem("token");
+      const userJson = await AsyncStorage.getItem("user");
+      const user = userJson ? JSON.parse(userJson) : null;
 
+      set({ token, user });
+    } catch (error) {
+      console.log("Async Auth Failed", error);
+    }
+  },
+  logout: async () => {
+    await AsyncStorage.removeItem("token");
 
-    set({token,user})
-
-  } catch (error) {
-console.log("Async Auth Failed",error);
-    
-  }
-
-  }
+    await AsyncStorage.removeItem("user");
+    set({ token: null, user: null });
+  },
 }));
