@@ -37,17 +37,105 @@ res.status(200).json({
     }
   }
 
+  const editBookRestController=async (
+    req:Request,
+    res:Response,
+    next:NextFunction
+  ) => {
+
+    try {
+             const oldData = await Book.findById(req.params.id)
+         if(!oldData){
+            res.status(400).json({
+              data: null,
+              meta: null,
+              error: {
+                status: "400",
+                title: `Book Does not Exist`,
+              },
+            });
+            return;
+          }
+       let existingImages = {};
+        if (Array.isArray(req.files) && req.files.length > 0) {
+          const urlPath = req.files[0].path
+          const q = urlPath.split(".")[2].split("/")
+          const PublicID = q[q.length - 2].concat("/", q[q.length - 1])
+    
+          existingImages = {
+            imageUrl: urlPath,
+            imgPublicId: PublicID
+          }
+            if (oldData && oldData.image?.imgPublicId) {
+                      await cloudinaryImg.uploader.destroy(oldData.image.imgPublicId, (error, result) => {
+                        if (error) {
+                          console.error('Error deleting thumbnail image:', error);
+                        } else {
+                          console.log('Deleted thumbnail image:', result);
+                        }
+                      });
+                    }
+          req.body.image = existingImages;
+
+          
+        }
+
+  const data = await Book.findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true })
+     
+
+// const newBook=new  Book(req.body)
+// const data =await newBook.save()
+res.status(200).json({
+  data: data,
+  meta: {message:{title:"Book Updated Successfully",status:200}},
+  error: null,
+});
+    } catch (error) {
+      console.log("error4",error);
+      
+        next(error)
+    }
+  }
+
 const getBookRestController = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
- try {
+  try {
+    const bookId = req.query.bookId as string | undefined;
+    const userId = req.query.userId as string | undefined;
+
+    // If bookId is present → fetch single book
+    if (bookId) {
+      const book = await Book.findById(bookId).populate(
+        "user",
+        "name email profileImage userFirstName userLastName"
+      );
+
+      if (!book) {
+         res.status(404).json({
+          data: null,
+          meta: {
+            message: { status: 404, title: "Book not found" },
+          },
+        });
+        return
+      }
+
+       res.status(200).json({
+        data: book,
+        meta: {
+          message: { status: 200, title: "Book Fetched Successfully" },
+        },
+      });
+      return
+    }
+
+    // Else → fetch list of books (existing logic)
     const page = parseInt(req.query["page[number]"] as string) || 1;
     const limit = parseInt(req.query["page[size]"] as string) || 10;
     const skip = (page - 1) * limit;
-
-    const userId = req.query.userId as string | undefined; // 👈 optional userId
 
     // Build filter condition
     const filter: any = {};
@@ -56,11 +144,11 @@ const getBookRestController = async (
     }
 
     const [books, total] = await Promise.all([
-      Book.find(filter) // 👈 apply filter (with or without user)
+      Book.find(filter)
         .skip(skip)
         .limit(limit)
         .populate("user", "name email profileImage userFirstName userLastName"),
-      Book.countDocuments(filter), // 👈 count with same filter
+      Book.countDocuments(filter),
     ]);
 
     const totalPages = Math.ceil(total / limit);
@@ -75,18 +163,20 @@ const getBookRestController = async (
         message: { status: 200, title: "Books Fetched Successfully" },
       },
       links: {
-        self: `${req.baseUrl}${req.path}?${userId ? `userId=${userId}&` : ""}page[number]=${page}&page[size]=${limit}`,
+        self: `${req.baseUrl}${req.path}?${
+          userId ? `userId=${userId}&` : ""
+        }page[number]=${page}&page[size]=${limit}`,
         next:
           page < totalPages
-            ? `${req.baseUrl}${req.path}?${userId ? `userId=${userId}&` : ""}page[number]=${
-                page + 1
-              }&page[size]=${limit}`
+            ? `${req.baseUrl}${req.path}?${
+                userId ? `userId=${userId}&` : ""
+              }page[number]=${page + 1}&page[size]=${limit}`
             : null,
         prev:
           page > 1
-            ? `${req.baseUrl}${req.path}?${userId ? `userId=${userId}&` : ""}page[number]=${
-                page - 1
-              }&page[size]=${limit}`
+            ? `${req.baseUrl}${req.path}?${
+                userId ? `userId=${userId}&` : ""
+              }page[number]=${page - 1}&page[size]=${limit}`
             : null,
       },
     });
@@ -140,4 +230,8 @@ res.status(200).json({
     next(error);
   }
 };
-  export{createBookRestController,getBookRestController,deleteBookRestController}
+
+
+
+
+  export{createBookRestController,getBookRestController,deleteBookRestController,editBookRestController}
