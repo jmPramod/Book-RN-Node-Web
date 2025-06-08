@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { fetchBookApi } from "../../services/API.services";
-import { Ionicons } from "@expo/vector-icons"; // Make sure you import this
+import { Ionicons } from "@expo/vector-icons"; 
 import COLORS from "../../constants/color";
 
 const Home = () => {
@@ -23,7 +23,7 @@ const fetchBook = async (pageNo = 1, refresh = false) => {
     if (refresh) setRefresh(true);
     else if (pageNo === 1) setLoading(true);
 
-    // Pass pageNo here 👇
+    
     const response = await fetchBookApi(pageNo);
  
     if (response?.meta?.message?.status === 200) {
@@ -32,8 +32,7 @@ const fetchBook = async (pageNo = 1, refresh = false) => {
       setBooks((prev) =>
         refresh ? response.data : [...prev, ...response.data]
       );
-
-      // Correct setHasMore logic
+ 
       const pageSize = 2;
       setHasMore(response.data.length === pageSize);
 
@@ -61,12 +60,11 @@ const formatDate = (dateString) => {
   const date = new Date(dateString);
   return date.toLocaleDateString("en-GB", {
     day: "2-digit",
-    month: "long", // or "short" for "Jun"
+    month: "long",  
     year: "numeric",
   });
 };
-
-  // Helper function to render stars based on rating
+ 
   const renderStars = (rating) => {
     const stars = [];
     for (let i = 1; i <= 5; i++) {
@@ -104,8 +102,7 @@ const formatDate = (dateString) => {
       </View>
 
       <Text style={styles.bookTitle}>{item.title}</Text>
-
-      {/* Render stars here */}
+ 
       {renderStars(item.rating)}
       
       <Text style={styles.bookDate}>{formatDate(item.updatedAt)}</Text>

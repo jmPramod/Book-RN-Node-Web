@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   Alert,
   Image,
-  ActivityIndicator, // 👈 added this
+  ActivityIndicator, 
 } from "react-native"; 
 
 import React, { useState } from "react";
@@ -52,7 +52,7 @@ const Create = () => {
           mediaTypes: ImagePicker.MediaTypeOptions.Images,
           allowsEditing: true,
           aspect: [3, 3],
-          quality: 0.5, // 1 for original quality
+          quality: 0.5, 
           base64: true,
         });
 
@@ -83,7 +83,7 @@ const Create = () => {
 
   const handleSubmit = async () => {
   try {
-    // Basic validation
+ 
     if (!formData.title.trim()) {
       Alert.alert("Validation Error", "Please enter a book title.");
       return;
@@ -109,8 +109,8 @@ const Create = () => {
     form.append("rating", formData.rating.toString());
     form.append("image", {
       uri: formData.image,
-      type: "image/jpeg", // Or "image/png" if it's png
-   name: `book_${Date.now()}.jpg`, // A name for your file
+      type: "image/jpeg",  
+   name: `book_${Date.now()}.jpg`, 
     });
     form.append("user",user._id)
  
@@ -181,7 +181,7 @@ const Create = () => {
         </View>
 
         <View style={styles.form}>
-          {/* Book title */}
+       
           <View style={styles.formGroup}>
             <Text style={styles.lable}>Book Title</Text>
             <View style={styles.inputContainer}>
@@ -203,13 +203,13 @@ const Create = () => {
             </View>
           </View>
 
-          {/* Rating */}
+        
           <View style={styles.formGroup}>
             <Text style={styles.lable}>Your rating</Text>
             <View style={styles.ratingContainer}>{renderRatingPicker()}</View>
           </View>
 
-          {/* Image */}
+     
           <View style={styles.formGroup}>
             <Text style={styles.lable}>Book image</Text>
             <TouchableOpacity style={styles.imagePicker} onPress={pickImage}>
@@ -234,7 +234,7 @@ const Create = () => {
             </TouchableOpacity>
           </View>
 
-          {/* Caption */}
+          
 
           <View style={styles.formGroup}>
             <Text style={styles.lable}>Caption</Text>
@@ -250,7 +250,7 @@ const Create = () => {
             ></TextInput>
             <Text></Text>
           </View>
-{/* Share button */}
+ 
 <TouchableOpacity style={styles.button} onPress={handleSubmit} disabled={formData.loading}>
 {
   formData.loading?
@@ -350,7 +350,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#fafafa",
-    overflow: "hidden", // important to clip image inside rounded border
+    overflow: "hidden", 
   },
   ratingContainer: {
     display: "flex",
@@ -375,8 +375,8 @@ const styles = StyleSheet.create({
   fontSize: 16,
   color: COLORS.textPrimary || "#333",
   backgroundColor: "#fff",
-  minHeight: 100, // makes it look like a text area
-  textAlignVertical: "top", // ensures text starts from the top in Android
+  minHeight: 100,  
+  textAlignVertical: "top",  
 },
 button: {
   flexDirection: "row",

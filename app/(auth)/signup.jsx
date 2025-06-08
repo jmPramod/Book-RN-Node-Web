@@ -9,8 +9,7 @@ import {
   View,
   Text,
   TouchableOpacity,
-  ScrollView,
-  Button,
+  ScrollView, 
   ActivityIndicator,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
@@ -38,7 +37,6 @@ const SignUp = () => {
 
     if (!formInput.userFirstName.trim()) newErrors.userFirstName = "First name is required.";
     if (!formInput.userLastName.trim()) newErrors.userLastName = "Last name is required.";
-
     if (!formInput.phone.trim()) {
       newErrors.phone = "Phone number is required.";
     } else if (!/^\d{10}$/.test(formInput.phone)) {
@@ -58,7 +56,6 @@ const SignUp = () => {
     } else if (formInput.password.length < 6) {
       newErrors.password = "Password must be at least 6 characters.";
     }
-
     if (!formInput.rePassword) {
       newErrors.rePassword = "Re-enter your password.";
     } else if (formInput.password !== formInput.rePassword) {

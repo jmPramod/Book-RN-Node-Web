@@ -13,21 +13,16 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import COLORS from "../../constants/color";
 import { defaultStyles } from "../../constants/styles";
-import { useNavigation } from "@react-navigation/native";
 import { useAuthStore } from "../../store/authStore";
 
-const Login = () => { 
-  
-    const router = useRouter();
-
+const Login = () => {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
-
-  const { user, token, isLoading,login } = useAuthStore();
-
-  const handleLogin =async () => {
+  const { user, token, isLoading, login } = useAuthStore();
+  const handleLogin = async () => {
     if (!email || !password) {
       setError("Please enter both email and password.");
       return;
@@ -38,17 +33,16 @@ const Login = () => {
       setError("Please enter a valid email address.");
       return;
     }
- 
+
     setError("");
-    const payload={email,password}
-const res=await login(payload)
-    };
-useEffect(()=>{
-  if(token&&user){
-  router.push("/")
-  } 
-  
-},[user, token])
+    const payload = { email, password };
+    const res = await login(payload);
+  };
+  useEffect(() => {
+    if (token && user) {
+      router.push("/");
+    }
+  }, [user, token]);
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <View style={styles.container}>
@@ -169,7 +163,6 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
     resizeMode: "contain",
-   
   },
   card: {
     backgroundColor: "white",
@@ -228,7 +221,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   loginButton: {
-    backgroundColor:COLORS.primary,
+    backgroundColor: COLORS.primary,
     paddingVertical: 12,
     borderRadius: 5,
     alignItems: "center",

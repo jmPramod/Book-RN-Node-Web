@@ -142,10 +142,9 @@ router.push({
           />
           <Text style={styles.userName}>{item.user.userFirstName}</Text>
         </View>
-
-        {/* Icons container */}
+ 
         <View style={styles.iconContainer}>
-          {/* Edit Icon */}
+       
           <TouchableOpacity onPress={() => handleEdit(item._id)}>
             <Ionicons
               name="create-outline"
@@ -155,7 +154,7 @@ router.push({
             />
           </TouchableOpacity>
 
-          {/* Delete Icon */}
+       
           <TouchableOpacity onPress={() => handleDelete(item._id)}>
             <Ionicons
               name="trash-outline"

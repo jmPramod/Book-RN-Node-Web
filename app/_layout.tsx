@@ -10,27 +10,26 @@ export default function RootLayout() {
   const segments = useSegments();
   const { checkAuth, user, token } = useAuthStore();
   
-  const [isReady, setIsReady] = useState(false); // NEW
+  const [isReady, setIsReady] = useState(false);  
   
   useEffect(() => {
-    checkAuth(); // Check if user is logged in or not
-    setIsReady(true); // Mark router ready after first render
+    checkAuth();  
+    setIsReady(true); 
   }, []);
   
-  // Handle navigation based on auth store
+ 
   useEffect(() => {
-    if (!isReady) return; // Don't navigate until ready
+    if (!isReady) return;  
     
-    const isAuthScreen = segments[0] == '(auth)'; // Check if on login/signup screen
+    const isAuthScreen = segments[0] == '(auth)'; 
     const isSignedIn = user && token;
     
     if (!isSignedIn && !isAuthScreen) {
       router.replace("/(auth)/login");
-    } else if (isSignedIn && isAuthScreen) {
-      // Only replace if needed to avoid unnecessary navigation
+    } else if (isSignedIn && isAuthScreen) { 
       router.replace('/(tabs)');
     }
-  }, [user, token, segments, isReady]); // include isReady
+  }, [user, token, segments, isReady]);  
 
   return (
     <SafeAreaProvider>

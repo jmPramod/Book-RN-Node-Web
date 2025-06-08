@@ -126,7 +126,7 @@ const Profile = () => {
       style={{ flex: 1 }}
     >
       <ScrollView contentContainerStyle={styles.container}>
-        {/* Top Bar with Logout */}
+    
         <View style={styles.topBar}>
           <Text style={styles.topBarTitle}>Profile</Text>
           <TouchableOpacity
@@ -140,8 +140,7 @@ const Profile = () => {
             <Ionicons name="log-out-outline" size={28} color={COLORS.primary} />
           </TouchableOpacity>
         </View>
-
-        {/* Profile Image with Edit Icon */}
+ 
         <TouchableOpacity
           style={styles.imagePickerWrapper}
           onPress={pickProfileImage}
@@ -160,8 +159,7 @@ const Profile = () => {
             <Ionicons name="pencil" size={20} color="#fff" />
           </View>
         </TouchableOpacity>
-
-        {/* Form Inputs */}
+ 
         <View style={styles.formGroup}>
           <Text style={styles.label}>First Name</Text>
           <TextInput

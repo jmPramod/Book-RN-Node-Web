@@ -12,7 +12,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 
-import React, { useState, useEffect } from "react";
+import   { useState, useEffect } from "react";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import COLORS from "../../constants/color";
@@ -23,8 +23,6 @@ import {  fetchBookApi, editBookApi } from "../../services/API.services";
 
 const EditBook = () => {
   const { bookId } = useLocalSearchParams();
- 
-  
   const { user } = useAuthStore();
   const [formData, setFormData] = useState({
     title: "",
@@ -37,8 +35,7 @@ const EditBook = () => {
   });
 
   const router = useRouter();
-
-  // Fetch existing book if editing
+ 
   useEffect(() => {
     const fetchBook = async () => {
       if (bookId) {
