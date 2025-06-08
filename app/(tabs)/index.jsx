@@ -25,10 +25,9 @@ const fetchBook = async (pageNo = 1, refresh = false) => {
 
     // Pass pageNo here 👇
     const response = await fetchBookApi(pageNo);
-    console.log("qwert_123", response.meta);
-
+ 
     if (response?.meta?.message?.status === 200) {
-      console.log("qwert", response.data);
+   
 
       setBooks((prev) =>
         refresh ? response.data : [...prev, ...response.data]

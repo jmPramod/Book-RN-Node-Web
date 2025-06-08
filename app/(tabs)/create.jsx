@@ -113,10 +113,10 @@ const Create = () => {
    name: `book_${Date.now()}.jpg`, // A name for your file
     });
     form.append("user",user._id)
-console.log("form",form);
+ 
 
    const resp=await createBookRecomendation(form)
-   console.log("resp.meta.message.status",resp);
+   
    
    if(resp.meta.message.status==200){
     Alert.alert("Success",resp.meta.message.title)
@@ -135,7 +135,7 @@ console.log("form",form);
     setFormData((prev) => ({ ...prev, loading: false }));
 
   } catch (error) {
-    console.log("Error submitting form:", error);
+  
     Alert.alert("Error", "Something went wrong. Please try again later.");
     setFormData((prev) => ({ ...prev, loading: false }));
   }

@@ -23,7 +23,7 @@ import {  fetchBookApi, editBookApi } from "../../services/API.services";
 
 const EditBook = () => {
   const { bookId } = useLocalSearchParams();
-  // console.log(bookId);
+ 
   
   const { user } = useAuthStore();
   const [formData, setFormData] = useState({
@@ -42,10 +42,10 @@ const EditBook = () => {
   useEffect(() => {
     const fetchBook = async () => {
       if (bookId) {
-        console.log("bookId007",bookId);
+         
         
         const resp = await fetchBookApi(1, null, bookId);
-        console.log("resp_123",resp);
+       
         
         if (resp?.data) {
           const { title, caption, rating, image, user: bookUser } = resp.data;
@@ -165,7 +165,7 @@ const EditBook = () => {
 
       setFormData((prev) => ({ ...prev, loading: false }));
     } catch (error) {
-      console.log("Error submitting form:", error);
+    
       Alert.alert("Error", "Something went wrong. Please try again later.");
       setFormData((prev) => ({ ...prev, loading: false }));
     }

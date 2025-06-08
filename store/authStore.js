@@ -25,12 +25,12 @@ export const useAuthStore = create((set) => ({
   login: async (payload) => {
     set({ isLoading: true });
     const res = await loginApi(payload);
-console.log("pk1",res);
+ 
 
     if (res.data?.meta?.message?.status == 200) {
       await AsyncStorage.setItem("user", JSON.stringify(res.data.data));
       await AsyncStorage.setItem("token", res?.data?.meta?.access_token);
-console.log(" res?.data?.meta?.access_token", res.data.data);
+ 
 
       set({ token: res?.data?.meta?.access_token, user: res.data.data, isLoading: false });
       Alert.alert("Success", res?.data?.meta?.message?.title);

@@ -5,8 +5,7 @@ const registerApi = async (payload) => {
   try {
     const response = await axios.post(`${apiUrl}/api/sign-up`, payload);
 
-    console.log("result1", response);
-
+   
     return {
       data: response?.data,
       error: null,
@@ -34,8 +33,7 @@ const loginApi = async (payload) => {
   try {
     const response = await axios.post(`${apiUrl}/api/login`, payload);
 
-    console.log("result1", response);
-
+   
     return {
       data: response?.data,
       error: null,
@@ -62,17 +60,14 @@ const loginApi = async (payload) => {
 const createBookRecomendation = async (payload) => {
   try {
     const token = await AsyncStorage.getItem("token");
-  
-    console.log("payload_!", `${apiUrl}/api/book`,payload);
-
+   
     const response = await axios.post(`${apiUrl}/api/book`, payload, {
       headers: {
         "Content-Type": "multipart/form-data",
         Authorization: `Bearer ${token}`,
       },
     });
-    console.log("response1", response);
-    return {
+     return {
       data: response?.data.data,
       error: response?.data.error,
       meta: response?.data.meta,
@@ -99,16 +94,14 @@ const editBookApi = async (bookId,payload) => {
   try {
     const token = await AsyncStorage.getItem("token");
   
-    console.log("payload_!", `${apiUrl}/api/book`,payload);
-
+   
     const response = await axios.patch(`${apiUrl}/api/book/${bookId}`, payload, {
       headers: {
         "Content-Type": "multipart/form-data",
         Authorization: `Bearer ${token}`,
       },
     })
-    console.log("response1", response);
-    return {
+     return {
       data: response?.data.data,
       error: response?.data.error,
       meta: response?.data.meta,
@@ -135,15 +128,13 @@ const deleteBookRecomendation = async (id) => {
   try {
     const token = await AsyncStorage.getItem("token");
   
-    console.log("payload_!", `${apiUrl}/api/book`);
-
+  
     const response = await axios.delete(`${apiUrl}/api/book/${id}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
-    console.log("response1", response);
-    return {
+     return {
       data: response?.data.data,
       error: response?.data.error,
       meta: response?.data.meta,
@@ -167,13 +158,11 @@ const deleteBookRecomendation = async (id) => {
 };
 
 const fetchBookApi = async (payload=1,user,bookId) => {
-  try {
-    console.log("1356",bookId);
+  try { 
     
     const token = await AsyncStorage.getItem("token");
 let   response
-    if(user){
-      console.log("1_1");
+    if(user){ 
       
    response = await axios.get(
       `${apiUrl}/api/book?page[number]=${payload}&page[size]=2&userId=${user}`,
@@ -186,8 +175,7 @@ let   response
 }
 else if(bookId){
   
-      console.log("1_2",bookId);
-   response = await axios.get(
+    response = await axios.get(
       `${apiUrl}/api/book?bookId=${bookId}`,
       {
         headers: {
@@ -196,8 +184,7 @@ else if(bookId){
       }
     );
 }
-else{
-   console.log("1_3");
+else{ 
  
    response = await axios.get(
       `${apiUrl}/api/book?page[number]=${payload}&page[size]=2`,
@@ -237,8 +224,7 @@ else{
 
 const updateUser=async(payload)=>{
    try {
-    const token = await AsyncStorage.getItem("token");
-    console.log("payload_!", `${apiUrl}/api/book`,payload);
+    const token = await AsyncStorage.getItem("token"); 
   const userJson = await AsyncStorage.getItem("user");
       const user = userJson ? JSON.parse(userJson) : null;
 
@@ -247,8 +233,7 @@ const updateUser=async(payload)=>{
         "Content-Type": "multipart/form-data",
         Authorization: `Bearer ${token}`,
       },
-    });
-    console.log("response1", response);
+    }); 
     return {
       data: response?.data.data,
       error: response?.data.error,

@@ -107,8 +107,7 @@ const Profile = () => {
       setFormData((prev) => ({ ...prev, loading: false }));
 
     } catch (error) {
-      console.log("Error submitting form:", error);
-      Alert.alert("Error", "Something went wrong. Please try again later.");
+        Alert.alert("Error", "Something went wrong. Please try again later.");
       setFormData((prev) => ({ ...prev, loading: false }));
     }
   };

@@ -46,8 +46,7 @@ const res=await login(payload)
 useEffect(()=>{
   if(token&&user){
   router.push("/")
-  }
-  console.log("user, token", token,user);
+  } 
   
 },[user, token])
   return (

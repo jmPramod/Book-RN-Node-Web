@@ -31,10 +31,10 @@ const router = useRouter();
       else if (pageNo === 1) setLoading(true);
 
       const response = await fetchBookApi(pageNo, user._id);
-      console.log("qwert_123", response.meta);
+     
 
       if (response?.meta?.message?.status === 200) {
-        console.log("qwert", response.data);
+       
 
         setBooks((prev) =>
           refresh ? response.data : [...prev, ...response.data]
@@ -88,10 +88,7 @@ const router = useRouter();
     return <View style={styles.starContainer}>{stars}</View>;
   };
 
-  const handleEdit = (bookId) => {
-    console.log("Edit clicked for book:", bookId);
-    // Example navigation (replace 'EditBookScreen' with your screen name)
-    // navigation.navigate("editBook", { bookId });
+  const handleEdit = (bookId) => { 
 router.push({
   pathname: '/(screens)/editBook',
   params: { bookId },
@@ -100,7 +97,7 @@ router.push({
   };
 
   const handleDelete = (bookId) => {
-    console.log(bookId);
+  
 
     Alert.alert(
       "Delete Post",
@@ -118,18 +115,15 @@ router.push({
               const resp = await deleteBookRecomendation(bookId);
 
               if (resp?.meta?.message?.status == 200) {
-                console.log(resp.meta.message.title); // message from server
-
+                
                 await fetchBook(1, true);
 
                 Alert.alert("Success", resp.meta.message.title);
               } else {
-                console.log("Delete failed", resp?.meta?.message?.title);
-                Alert.alert("Error", "Could not delete the post. Please try again.");
+                   Alert.alert("Error", "Could not delete the post. Please try again.");
               }
             } catch (error) {
-              console.log("Delete error", error);
-              Alert.alert("Error", "Something went wrong while deleting.");
+                 Alert.alert("Error", "Something went wrong while deleting.");
             }
           },
         },
