@@ -3,7 +3,9 @@ import { Stack } from 'expo-router'
 
 const AuthLayouts = () => {
   return (
-  <Stack/>
+  <Stack
+  screenOptions={{headerShown:false}}
+  />
   )
 }
 

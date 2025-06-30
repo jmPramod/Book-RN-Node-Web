@@ -1,5 +1,5 @@
-import COLORS from './color';
 import { StyleSheet } from 'react-native';
+import COLORS from './color';
 
 export const defaultStyles = StyleSheet.create({
   container: {
@@ -13,6 +13,7 @@ export const defaultStyles = StyleSheet.create({
     borderRadius: 8,
     padding: 10,
     backgroundColor: '#fff',
+    color:"black"
   },
   btn: {
     backgroundColor: COLORS.primary,

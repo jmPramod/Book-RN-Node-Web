@@ -1,6 +1,8 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
-const apiUrl = process.env.EXPO_PUBLIC_API_URL;
+// const apiUrl = process.env.EXPO_PUBLIC_API_URL;
+const apiUrl = "https://book-rn-node-web.vercel.app"
+
 const registerApi = async (payload) => {
   try {
     const response = await axios.post(`${apiUrl}/api/sign-up`, payload);
@@ -12,7 +14,7 @@ const registerApi = async (payload) => {
       meta: response?.meta,
     };
   } catch (error) {
-    console.log("AXIOS ERROR", error);
+    console.log("AXIOS ERROR1", error);
 
     return {
       data: null,
@@ -31,7 +33,9 @@ const registerApi = async (payload) => {
 
 const loginApi = async (payload) => {
   try {
+    console.log("url",`${apiUrl}/api/login`);
     const response = await axios.post(`${apiUrl}/api/login`, payload);
+console.log("response",response);
 
    
     return {
@@ -40,7 +44,7 @@ const loginApi = async (payload) => {
       meta: response?.meta,
     };
   } catch (error) {
-    console.log("AXIOS ERROR", error);
+    console.log("AXIOS ERROR 2", error);
 
     return {
       data: null,
@@ -257,4 +261,5 @@ const updateUser=async(payload)=>{
   }
 }
 
-export {updateUser,editBookApi, registerApi, loginApi, createBookRecomendation, fetchBookApi,deleteBookRecomendation };
+export { createBookRecomendation, deleteBookRecomendation, editBookApi, fetchBookApi, loginApi, registerApi, updateUser };
+

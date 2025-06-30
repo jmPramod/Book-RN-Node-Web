@@ -1,20 +1,25 @@
-import { Image } from "expo-image";
-import { useEffect, useState } from "react";
-import { Link } from "expo-router";
-import { useAuthStore } from "../../store/authStore";
-import { Picker } from "@react-native-picker/picker";
-import {
-  StyleSheet,
-  TextInput,
-  View,
-  Text,
-  TouchableOpacity,
-  ScrollView, 
-  ActivityIndicator,
-} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { Picker } from "@react-native-picker/picker";
+import { Image } from "expo-image";
+import { Link } from "expo-router";
+import { useEffect, useState } from "react";
+import {
+  ActivityIndicator,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
+} from "react-native";
+
 import COLORS from "../../constants/color";
 import { defaultStyles } from "../../constants/styles";
+import { useAuthStore } from "../../store/authStore";
 
 const SignUp = () => {
   const [formInput, setFormInput] = useState({
@@ -77,149 +82,159 @@ const SignUp = () => {
   }, [formInput]);
 
   return (
-    <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-      <View style={styles.container}>
-        <View style={styles.topIllustation}>
-          <Image
-            source={require("../../assets/images/register.png")}
-            style={styles.illustration}
-          />
-        </View>
-
-        <View style={styles.card}>
-          <View style={styles.formContiner}>
-            <InputField
-              label="First Name"
-              icon="person-outline"
-              placeholder="Enter your First Name"
-              value={formInput.userFirstName}
-              onChangeText={(text) =>
-                setFormInput({ ...formInput, userFirstName: text })
-              }
-              disabled={isLoading}
-              error={errors.userFirstName}
-            />
-
-            <InputField
-              label="Last Name"
-              icon="person-outline"
-              placeholder="Enter your Last Name"
-              value={formInput.userLastName}
-              onChangeText={(text) =>
-                setFormInput({ ...formInput, userLastName: text })
-              }
-              disabled={isLoading}
-              error={errors.userLastName}
-            />
-
-            <InputField
-              label="Phone"
-              icon="call-outline"
-              placeholder="Enter your Phone Number"
-              keyboardType="phone-pad"
-              value={formInput.phone}
-              onChangeText={(text) =>
-                setFormInput({ ...formInput, phone: text })
-              }
-              disabled={isLoading}
-              error={errors.phone}
-            />
-
-            <InputField
-              label="Email"
-              icon="mail-outline"
-              placeholder="Enter your Email"
-              keyboardType="email-address"
-              autoCapitalize="none"
-              value={formInput.email}
-              onChangeText={(text) =>
-                setFormInput({ ...formInput, email: text })
-              }
-              disabled={isLoading}
-              error={errors.email}
-            />
-
-            <View style={styles.inputGroup}>
-              <Text style={styles.label}>Gender</Text>
-              <View style={styles.pickerContainer}>
-                <Picker
-                  selectedValue={formInput.gender}
-                  onValueChange={(itemValue) =>
-                    setFormInput({ ...formInput, gender: itemValue })
-                  }
-                  style={{ flex: 1 }}
-                  enabled={!isLoading}
-                >
-                  <Picker.Item label="Select Gender" value="" enabled={false} />
-                  <Picker.Item label="Male" value="Male" />
-                  <Picker.Item label="Female" value="Female" />
-                  <Picker.Item label="Others" value="Others" />
-                </Picker>
-              </View>
-              {errors.gender && (
-                <Text style={styles.errorText}>{errors.gender}</Text>
-              )}
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={{ flex: 1 }}
+    >
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <ScrollView
+          contentContainerStyle={{ flexGrow: 1 }}
+          keyboardShouldPersistTaps="handled"
+        >
+          <View style={styles.container}>
+            <View style={styles.topIllustation}>
+              <Image
+                source={require("../../assets/images/register.png")}
+                style={styles.illustration}
+              />
             </View>
 
-            <InputField
-              label="Password"
-              icon="lock-closed-outline"
-              placeholder="Enter your Password"
-              secureTextEntry={!showPassword}
-              value={formInput.password}
-              onChangeText={(text) =>
-                setFormInput({ ...formInput, password: text })
-              }
-              showToggle
-              showValue={showPassword}
-              toggleShow={() => setShowPassword(!showPassword)}
-              disabled={isLoading}
-              error={errors.password}
-            />
+            <View style={styles.card}>
+              <Text style={styles.title}>Register Now</Text>
+              <View style={styles.formContiner}>
+                <InputField
+                  label="First Name"
+                  icon="person-outline"
+                  placeholder="Enter your First Name"
+                  value={formInput.userFirstName}
+                  onChangeText={(text) =>
+                    setFormInput({ ...formInput, userFirstName: text })
+                  }
+                  disabled={isLoading}
+                  error={errors.userFirstName}
+                />
 
-            <InputField
-              label="Re-enter Password"
-              icon="lock-closed-outline"
-              placeholder="Re-enter your Password"
-              secureTextEntry={!showRePassword}
-              value={formInput.rePassword}
-              onChangeText={(text) =>
-                setFormInput({ ...formInput, rePassword: text })
-              }
-              showToggle
-              showValue={showRePassword}
-              toggleShow={() => setShowRePassword(!showRePassword)}
-              disabled={isLoading}
-              error={errors.rePassword}
-            />
+                <InputField
+                  label="Last Name"
+                  icon="person-outline"
+                  placeholder="Enter your Last Name"
+                  value={formInput.userLastName}
+                  onChangeText={(text) =>
+                    setFormInput({ ...formInput, userLastName: text })
+                  }
+                  disabled={isLoading}
+                  error={errors.userLastName}
+                />
+
+                <InputField
+                  label="Phone"
+                  icon="call-outline"
+                  placeholder="Enter your Phone Number"
+                  keyboardType="phone-pad"
+                  value={formInput.phone}
+                  onChangeText={(text) =>
+                    setFormInput({ ...formInput, phone: text })
+                  }
+                  disabled={isLoading}
+                  error={errors.phone}
+                />
+
+                <InputField
+                  label="Email"
+                  icon="mail-outline"
+                  placeholder="Enter your Email"
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                  value={formInput.email}
+                  onChangeText={(text) =>
+                    setFormInput({ ...formInput, email: text })
+                  }
+                  disabled={isLoading}
+                  error={errors.email}
+                />
+
+                <View style={styles.inputGroup}>
+                  <Text style={styles.label}>Gender</Text>
+                  <View style={styles.pickerContainer}>
+                    <Picker
+                      selectedValue={formInput.gender}
+                      onValueChange={(itemValue) =>
+                        setFormInput({ ...formInput, gender: itemValue })
+                      }
+                      style={{ flex: 1 ,color:"black"}}
+                      enabled={!isLoading}
+                    >
+                   <Picker.Item label="Select Gender" value="" color="gray" enabled={!formInput.gender} />
+         <Picker.Item label="Male" value="Male" style={{color:"black"}} />
+                      <Picker.Item label="Female" value="Female"  style={{color:"black"}}/>
+                      <Picker.Item label="Others" value="Others"  style={{color:"black"}}/>
+                    </Picker>
+                  </View>
+                  {errors.gender && (
+                    <Text style={styles.errorText}>{errors.gender}</Text>
+                  )}
+                </View>
+
+                <InputField
+                  label="Password"
+                  icon="lock-closed-outline"
+                  placeholder="Enter your Password"
+                  secureTextEntry={!showPassword}
+                  value={formInput.password}
+                  onChangeText={(text) =>
+                    setFormInput({ ...formInput, password: text })
+                  }
+                  showToggle
+                  showValue={showPassword}
+                  toggleShow={() => setShowPassword(!showPassword)}
+                  disabled={isLoading}
+                  error={errors.password}
+                />
+
+                <InputField
+                  label="Re-enter Password"
+                  icon="lock-closed-outline"
+                  placeholder="Re-enter your Password"
+                  secureTextEntry={!showRePassword}
+                  value={formInput.rePassword}
+                  onChangeText={(text) =>
+                    setFormInput({ ...formInput, rePassword: text })
+                  }
+                  showToggle
+                  showValue={showRePassword}
+                  toggleShow={() => setShowRePassword(!showRePassword)}
+                  disabled={isLoading}
+                  error={errors.rePassword}
+                />
+              </View>
+
+              <View style={styles.bottomContainer}>
+                <TouchableOpacity disabled={isLoading}>
+                  <Text style={styles.forgotPassword}>Forgot Password?</Text>
+                </TouchableOpacity>
+                <TouchableOpacity disabled={isLoading}>
+                  <Link style={styles.forgotPassword} href="/(auth)/login">
+                    Back to Login
+                  </Link>
+                </TouchableOpacity>
+              </View>
+
+              {isLoading ? (
+                <ActivityIndicator size="large" color={COLORS.primary} style={{ marginTop: 10 }} />
+              ) : (
+                <TouchableOpacity
+                  onPress={handleSignUp}
+                  style={styles.submitButton}
+                  disabled={isLoading}
+                >
+                  <Text style={styles.submitButtonText}>Register</Text>
+                </TouchableOpacity>
+              )}
+            </View>
           </View>
-
-          <View style={styles.bottomContainer}>
-            <TouchableOpacity disabled={isLoading}>
-              <Text style={styles.forgotPassword}>Forgot Password?</Text>
-            </TouchableOpacity>
-            <TouchableOpacity disabled={isLoading}>
-              <Link style={styles.forgotPassword} href="/(auth)/login">
-                Back to Login
-              </Link>
-            </TouchableOpacity>
-          </View>
-
-        {isLoading ? (
-  <ActivityIndicator size="large" color={COLORS.primary} style={{ marginTop: 10 }} />
-) : (
-  <TouchableOpacity
-    onPress={handleSignUp}
-    style={styles.submitButton}
-    disabled={isLoading}
-  >
-    <Text style={styles.submitButtonText}>Register</Text>
-  </TouchableOpacity>
-)}
-
-        </View>
-      </View>
-    </ScrollView>
+        </ScrollView>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -279,6 +294,12 @@ const InputField = ({
 export default SignUp;
 
 const styles = StyleSheet.create({
+  title: {
+    fontSize: 20,
+    fontWeight: "700",
+    textAlign: "center",
+    marginVertical: 20,
+  },
   container: {
     alignItems: "center",
     width: "100%",
@@ -325,8 +346,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#ABABAB",
     borderRadius: 5,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
+    paddingHorizontal: 0,
+    paddingVertical: 0,
+ 
   },
   inputIcon: {
     marginRight: 8,
@@ -352,18 +374,16 @@ const styles = StyleSheet.create({
     fontSize: 12,
     marginTop: 5,
   },
-submitButton: {
-  backgroundColor: COLORS.primary,
-  paddingVertical: 15,
-  borderRadius: 5,
-  alignItems: "center",
-  marginTop: 15,
-},
-
-submitButtonText: {
-  color: "white",
-  fontWeight: "bold",
-  fontSize: 16,
-},
-
+  submitButton: {
+    backgroundColor: COLORS.primary,
+    paddingVertical: 15,
+    borderRadius: 5,
+    alignItems: "center",
+    marginTop: 15,
+  },
+  submitButtonText: {
+    color: "white",
+    fontWeight: "bold",
+    fontSize: 16,
+  },
 });
